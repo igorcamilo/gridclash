@@ -1,0 +1,18 @@
+{
+  "images" : [
+    {
+      "filename" : "GridWarsLogo-tvOS-Back400.png",
+      "idiom" : "tv",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "GridWarsLogo-tvOS-Back800.png",
+      "idiom" : "tv",
+      "scale" : "2x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
