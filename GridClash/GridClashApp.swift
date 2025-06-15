@@ -25,16 +25,23 @@ struct GridClashApp: App {
 
 #if os(macOS)
 class AppDelegate: NSObject, NSApplicationDelegate {
-    func applicationDidFinishLaunching(_ notification: Notification) {
-        let window = (notification.object as? NSApplication)?.keyWindow
+    private var isGameCenterInitialized = false
+    func applicationWillUpdate(_ notification: Notification) {
+        guard
+            !isGameCenterInitialized,
+            let window = (notification.object as? NSApplication)?.keyWindow
+        else {
+            return
+        }
         GKLocalPlayer.local.authenticateHandler = { viewController, error in
             if let viewController {
-                window?.contentViewController?.presentAsModalWindow(viewController)
+                window.contentViewController?.presentAsModalWindow(viewController)
             }
         }
         GKAccessPoint.shared.location = .topTrailing
         GKAccessPoint.shared.parentWindow = window
         GKAccessPoint.shared.isActive = true
+        isGameCenterInitialized = true
     }
 }
 #else
@@ -60,10 +67,12 @@ class SceneDelegate: NSObject, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
-        let window = (scene as? UIWindowScene)?.keyWindow
+        guard let window = (scene as? UIWindowScene)?.keyWindow else {
+            return
+        }
         GKLocalPlayer.local.authenticateHandler = { viewController, error in
             if let viewController {
-                window?.rootViewController?.present(viewController, animated: true)
+                window.rootViewController?.present(viewController, animated: true)
             }
         }
         GKAccessPoint.shared.location = .topTrailing
