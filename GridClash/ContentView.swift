@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(GameManager.self) private var gameManager
+    @Bindable var gameManager: GameManager
 
     var body: some View {
         VStack {
@@ -20,13 +20,18 @@ struct ContentView: View {
             Button("Multiplayer") {
                 gameManager.startMultiplayerGame()
             }
-            .disabled(!gameManager.isAuthenticated)
         }
         .padding()
         .buttonStyle(.borderedProminent)
+        .alert(
+            "Multiplayer Disabled",
+            isPresented: $gameManager.isMultiplayerRestrictedAlertPresented
+        ) {
+            Button("OK") {}
+        }
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(gameManager: GameManager())
 }

@@ -14,14 +14,12 @@ struct GridClashApp: App {
     var body: some Scene {
         #if os(macOS)
         Window("Grid Clash", id: "MainWindow") {
-            ContentView()
+            ContentView(gameManager: gameManager)
         }
-        .environment(gameManager)
         #else
         WindowGroup("Grid Clash", id: "MainWindow") {
-            ContentView()
+            ContentView(gameManager: gameManager)
         }
-        .environment(gameManager)
         #endif
     }
 }

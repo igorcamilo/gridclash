@@ -15,11 +15,12 @@ private let logger = Logger(subsystem: "GridClash", category: "GameManager")
 @Observable
 @MainActor
 final class GameManager: NSObject {
-    private(set) var isAuthenticated = false
+    var isMultiplayerRestrictedAlertPresented = false
 
     override init() {
         super.init()
         GKAccessPoint.shared.isActive = true
+        GKLocalPlayer.local.register(self)
         GKLocalPlayer.local.authenticateHandler = { [weak self] viewController, error in
             logger.info("Game Center authentication handler called")
             guard let self else {
@@ -30,11 +31,7 @@ final class GameManager: NSObject {
                 present(viewController)
             }
             if let error {
-                isAuthenticated = false
                 logger.error("Error authenticating Game Center: \(error)")
-            } else {
-                isAuthenticated = true
-                logger.info("Game Center authenticated")
             }
         }
     }
@@ -44,11 +41,41 @@ final class GameManager: NSObject {
     }
 
     func startMultiplayerGame() {
+        guard GKLocalPlayer.local.isAuthenticated else {
+            logger.info("Game Center not authenticated, presenting authentication UI")
+            GKAccessPoint.shared.trigger {
+                logger.info("Authentication UI presented")
+            }
+            return
+        }
+        if GKLocalPlayer.local.isMultiplayerGamingRestricted {
+            logger.info("Multiplayer gaming restricted")
+            isMultiplayerRestrictedAlertPresented = true
+            return
+        }
         logger.info("Starting multiplayer game")
+        let request = GKMatchRequest()
+        let viewController = GKTurnBasedMatchmakerViewController(matchRequest: request)
+        viewController.turnBasedMatchmakerDelegate = self
+        present(viewController)
     }
+}
 
-    #if os(macOS)
-    private func present(_ viewController: NSViewController) {
+extension GameManager: GKLocalPlayerListener {}
+
+extension GameManager: @preconcurrency GKTurnBasedMatchmakerViewControllerDelegate {
+    func turnBasedMatchmakerViewControllerWasCancelled(_ viewController: GKTurnBasedMatchmakerViewController) {
+        #if os(macOS)
+        viewController.dismiss(self)
+        #endif
+    }
+    
+    func turnBasedMatchmakerViewController(_ viewController: GKTurnBasedMatchmakerViewController, didFailWithError error: any Error) {}
+}
+
+#if os(macOS)
+private extension GameManager {
+    func present(_ viewController: NSViewController) {
         guard let window = NSApplication.shared.windows.first else {
             logger.error("Could not find window")
             return
@@ -59,8 +86,10 @@ final class GameManager: NSObject {
         }
         mainViewController.presentAsSheet(viewController)
     }
-    #else
-    private func present(_ viewController: UIViewController) {
+}
+#else
+private extension GameManager {
+    func present(_ viewController: UIViewController) {
         guard let scene = UIApplication.shared.connectedScenes.first else {
             logger.error("Could not find scene")
             return
@@ -79,5 +108,5 @@ final class GameManager: NSObject {
         }
         mainViewController.present(viewController, animated: true)
     }
-    #endif
 }
+#endif
