@@ -15,14 +15,10 @@ private let logger = Logger(subsystem: "GridClash", category: "GameManager")
 @Observable
 @MainActor
 final class GameManager: NSObject {
-    private(set) var initialized = false
+    private(set) var isAuthenticated = false
 
-    func initialize() {
-        logger.info("Initializing GameManager")
-        if initialized {
-            logger.info("GameManager already initialized")
-            return
-        }
+    override init() {
+        super.init()
         GKAccessPoint.shared.isActive = true
         GKLocalPlayer.local.authenticateHandler = { [weak self] viewController, error in
             logger.info("Game Center authentication handler called")
@@ -31,13 +27,13 @@ final class GameManager: NSObject {
                 return
             }
             if let viewController {
-                initialized = false
                 present(viewController)
-            } else if let error {
-                initialized = false
+            }
+            if let error {
+                isAuthenticated = false
                 logger.error("Error authenticating Game Center: \(error)")
             } else {
-                initialized = true
+                isAuthenticated = true
                 logger.info("Game Center authenticated")
             }
         }

@@ -18,7 +18,7 @@ struct GridClashApp: App {
         }
         .environment(gameManager)
         #else
-        WindowGroup {
+        WindowGroup("Grid Clash", id: "MainWindow") {
             ContentView()
         }
         .environment(gameManager)

@@ -20,13 +20,10 @@ struct ContentView: View {
             Button("Multiplayer") {
                 gameManager.startMultiplayerGame()
             }
-            .disabled(!gameManager.initialized)
+            .disabled(!gameManager.isAuthenticated)
         }
         .padding()
         .buttonStyle(.borderedProminent)
-        .task {
-            gameManager.initialize()
-        }
     }
 }
 
