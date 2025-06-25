@@ -8,14 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(GameManager.self) private var gameManager
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, Xcode Cloud!")
+            Text("Welcome to Grid Clash!")
+                .font(.title)
+            Button("Single Player") {
+                gameManager.startGame()
+            }
+            Button("Multiplayer") {
+                gameManager.startMultiplayerGame()
+            }
+            .disabled(!gameManager.initialized)
         }
         .padding()
+        .buttonStyle(.borderedProminent)
+        .task {
+            gameManager.initialize()
+        }
     }
 }
 
