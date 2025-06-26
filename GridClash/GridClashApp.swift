@@ -15,10 +15,12 @@ struct GridClashApp: App {
         #if os(macOS)
         Window("Grid Clash", id: "MainWindow") {
             ContentView(gameManager: gameManager)
+                .onAppear { gameManager.authenticate() }
         }
         #else
         WindowGroup("Grid Clash", id: "MainWindow") {
             ContentView(gameManager: gameManager)
+                .onAppear { gameManager.authenticate() }
         }
         #endif
     }

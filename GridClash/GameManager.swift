@@ -17,8 +17,16 @@ private let logger = Logger(subsystem: "GridClash", category: "GameManager")
 final class GameManager: NSObject {
     var isMultiplayerRestrictedAlertPresented = false
 
-    override init() {
-        super.init()
+    @ObservationIgnored private var isAuthenticateCalled = false
+
+    func authenticate() {
+        logger.info("Authenticating Game Center")
+        guard !isAuthenticateCalled else {
+            logger.info("Game Center authentication already called")
+            return
+        }
+        isAuthenticateCalled = true
+        GKAccessPoint.shared.parentWindow = window
         GKAccessPoint.shared.isActive = true
         GKLocalPlayer.local.register(self)
         GKLocalPlayer.local.authenticateHandler = { [weak self] viewController, error in
@@ -75,8 +83,12 @@ extension GameManager: @preconcurrency GKTurnBasedMatchmakerViewControllerDelega
 
 #if os(macOS)
 private extension GameManager {
+    var window: NSWindow? {
+        NSApplication.shared.windows.first
+    }
+
     func present(_ viewController: NSViewController) {
-        guard let window = NSApplication.shared.windows.first else {
+        guard let window else {
             logger.error("Could not find window")
             return
         }
@@ -89,16 +101,20 @@ private extension GameManager {
 }
 #else
 private extension GameManager {
-    func present(_ viewController: UIViewController) {
+    var window: UIWindow? {
         guard let scene = UIApplication.shared.connectedScenes.first else {
             logger.error("Could not find scene")
-            return
+            return nil
         }
         guard let windowScene = scene as? UIWindowScene else {
             logger.error("Could not find window scene")
-            return
+            return nil
         }
-        guard let window = windowScene.windows.first else {
+        return windowScene.windows.first
+    }
+
+    func present(_ viewController: UIViewController) {
+        guard let window else {
             logger.error("Could not find window")
             return
         }
