@@ -15,6 +15,7 @@ private let logger = Logger(subsystem: "GridClash", category: "GameManager")
 @Observable
 @MainActor
 final class GameManager: NSObject {
+    var gameMatch: GameMatch?
     var isMultiplayerRestrictedAlertPresented = false
 
     @ObservationIgnored private var isAuthenticateCalled = false
@@ -44,6 +45,11 @@ final class GameManager: NSObject {
         }
     }
 
+    func closeGame() {
+        logger.info("Closing game")
+        gameMatch = nil
+    }
+
     func startGame() {
         logger.info("Starting single player game")
     }
@@ -63,6 +69,7 @@ final class GameManager: NSObject {
         }
         logger.info("Starting multiplayer game")
         let request = GKMatchRequest()
+        request.maxPlayers = 2
         let viewController = GKTurnBasedMatchmakerViewController(matchRequest: request)
         viewController.turnBasedMatchmakerDelegate = self
         present(viewController)
@@ -71,14 +78,39 @@ final class GameManager: NSObject {
 
 extension GameManager: GKLocalPlayerListener {}
 
+extension GameManager: @preconcurrency GKTurnBasedEventListener {
+    func player(_ player: GKPlayer, didRequestMatchWithOtherPlayers playersToInvite: [GKPlayer]) {
+        logger.info("Player \(player) requested a match with other players: \(playersToInvite)")
+    }
+
+    func player(_ player: GKPlayer, receivedTurnEventFor match: GKTurnBasedMatch, didBecomeActive: Bool) {
+        logger.info("Player received a turn event for match")
+        if didBecomeActive {
+            logger.info("Player is now active in the match")
+            gameMatch = GameMatch(multiplayerMatch: match)
+            return
+        }
+    }
+}
+
 extension GameManager: @preconcurrency GKTurnBasedMatchmakerViewControllerDelegate {
     func turnBasedMatchmakerViewControllerWasCancelled(_ viewController: GKTurnBasedMatchmakerViewController) {
+        logger.info("Matchmaker view controller cancelled")
         #if os(macOS)
         viewController.dismiss(self)
+        #else
+        viewController.dismiss(animated: true)
         #endif
     }
     
-    func turnBasedMatchmakerViewController(_ viewController: GKTurnBasedMatchmakerViewController, didFailWithError error: any Error) {}
+    func turnBasedMatchmakerViewController(_ viewController: GKTurnBasedMatchmakerViewController, didFailWithError error: any Error) {
+        logger.error("Matchmaker view controller failed: \(error)")
+        #if os(macOS)
+        viewController.dismiss(self)
+        #else
+        viewController.dismiss(animated: true)
+        #endif
+    }
 }
 
 #if os(macOS)

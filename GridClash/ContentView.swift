@@ -11,6 +11,17 @@ struct ContentView: View {
     @Bindable var gameManager: GameManager
 
     var body: some View {
+        if let gameMatch = gameManager.gameMatch {
+            GameMatchView(
+                gameManager: gameManager,
+                gameMatch: gameMatch
+            )
+        } else {
+            mainMenu
+        }
+    }
+
+    private var mainMenu: some View {
         VStack {
             Text("Welcome to Grid Clash!")
                 .font(.title)
