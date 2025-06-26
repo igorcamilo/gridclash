@@ -70,6 +70,7 @@ final class GameManager: NSObject {
         logger.info("Starting multiplayer game")
         let request = GKMatchRequest()
         request.maxPlayers = 2
+        request.minPlayers = 2
         let viewController = GKTurnBasedMatchmakerViewController(matchRequest: request)
         viewController.turnBasedMatchmakerDelegate = self
         present(viewController)
@@ -88,8 +89,8 @@ extension GameManager: @preconcurrency GKTurnBasedEventListener {
         if didBecomeActive {
             logger.info("Player is now active in the match")
             gameMatch = GameMatch(multiplayerMatch: match)
-            return
         }
+        gameMatch?.updateMultiplayerMatch(match)
     }
 }
 

@@ -15,11 +15,10 @@ private let logger = Logger(subsystem: "GridClash", category: "GameMatch")
 @Observable
 @MainActor
 final class GameMatch {
-    var isMyTurn: Bool
-    let multiplayerMatch: GKTurnBasedMatch?
+    var isMyTurn = false
+    private var multiplayerMatch: GKTurnBasedMatch?
 
     init(multiplayerMatch: GKTurnBasedMatch?) {
-        self.isMyTurn = multiplayerMatch?.currentParticipant?.player == GKLocalPlayer.local
         self.multiplayerMatch = multiplayerMatch
     }
 
@@ -33,16 +32,33 @@ final class GameMatch {
                     let nextParticipants = multiplayerMatch.participants.filter {
                         $0.player != GKLocalPlayer.local
                     }
-                    try await multiplayerMatch.endTurn(
-                        withNextParticipants: nextParticipants,
-                        turnTimeout: 60,
-                        match: Data()
-                    )
+                    let _: Void = try await withCheckedThrowingContinuation { continuation in
+                        // As of Xcode 16.4, the async version of this method creates warnings
+                        multiplayerMatch.endTurn(
+                            withNextParticipants: nextParticipants,
+                            turnTimeout: 60,
+                            match: Data()
+                        ) { error in
+                            if let error {
+                                continuation.resume(throwing: error)
+                            } else {
+                                continuation.resume()
+                            }
+                        }
+                    }
                 }
             } catch {
                 logger.error("Error ending turn: \(error)")
                 isMyTurn = multiplayerMatch?.currentParticipant?.player == GKLocalPlayer.local
             }
         }
+    }
+
+    func updateMultiplayerMatch(_ match: GKTurnBasedMatch) {
+        guard multiplayerMatch?.matchID == match.matchID else {
+            return
+        }
+        isMyTurn = match.currentParticipant?.player == GKLocalPlayer.local
+        multiplayerMatch = match
     }
 }
