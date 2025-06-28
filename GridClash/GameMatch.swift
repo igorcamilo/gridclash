@@ -17,12 +17,16 @@ private let logger = Logger(subsystem: "GridClash", category: "GameMatch")
 final class GameMatch {
     let multiplayerMatchID: String?
 
-    var board = [BoardSlot](repeating: .empty, count: 9)
+    var board: [BoardSlot]
     var isErrorAlertPresented = false
     var isMyTurn = false
     var localPlayerIndex: Int?
 
-    init(multiplayerMatchID: String?) {
+    init(
+        board: [BoardSlot] = .init(repeating: .empty, count: 9),
+        multiplayerMatchID: String?
+    ) {
+        self.board = board
         self.multiplayerMatchID = multiplayerMatchID
     }
 

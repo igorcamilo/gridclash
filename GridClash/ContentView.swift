@@ -24,7 +24,7 @@ struct ContentView: View {
     private var mainMenu: some View {
         VStack {
             Text("Welcome to Grid Clash!")
-                .font(.title)
+                .font(.largeTitle)
             Button("Single Player") {
                 gameManager.startGame()
             }
@@ -33,6 +33,9 @@ struct ContentView: View {
             }
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.background)
+        .foregroundStyle(Color.primaryText)
         .buttonStyle(.borderedProminent)
         .alert(
             "Multiplayer Disabled",

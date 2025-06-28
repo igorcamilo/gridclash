@@ -15,7 +15,7 @@ struct GameMatchView: View {
     var body: some View {
         VStack {
             Text("Game Match")
-            Text("Is My Turn: \(gameMatch.isMyTurn)")
+                .font(.largeTitle)
             Grid {
                 gridRow(0..<3)
                 gridRow(3..<6)
@@ -31,6 +31,9 @@ struct GameMatchView: View {
             }
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.background)
+        .foregroundStyle(Color.primaryText)
         .buttonStyle(.borderedProminent)
         .alert("Error", isPresented: $gameMatch.isErrorAlertPresented) {
             Button("Close Game") {
@@ -46,9 +49,11 @@ struct GameMatchView: View {
                 Button {
                     gameMatch.playTurn(index: index)
                 } label: {
-                    Text(verbatim: slot.title)
+                    slot.view
+                        .font(.largeTitle)
                         .frame(width: 50, height: 50)
                 }
+                .tint(slot.color)
                 .disabled(slot != .empty)
             }
         }
@@ -56,11 +61,19 @@ struct GameMatchView: View {
 }
 
 private extension BoardSlot {
-    var title: String {
+    var color: Color {
         switch self {
-        case .empty: ""
-        case .player1: "⭕️"
-        case .player2: "❌"
+        case .empty: .accent
+        case .player1: .player1
+        case .player2: .player2
+        }
+    }
+
+    @ViewBuilder var view: some View {
+        switch self {
+        case .empty: Image("")
+        case .player1: Image(systemName: "xmark")
+        case .player2: Image(systemName: "circle")
         }
     }
 }
@@ -68,6 +81,13 @@ private extension BoardSlot {
 #Preview {
     GameMatchView(
         gameManager: GameManager(),
-        gameMatch: GameMatch(multiplayerMatchID: nil)
+        gameMatch: GameMatch(
+            board: [
+                .empty, .player1, .player2,
+                .player1, .player2, .empty,
+                .player2, .empty, .player1
+            ],
+            multiplayerMatchID: nil
+        )
     )
 }
