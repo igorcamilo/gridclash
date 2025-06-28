@@ -26,6 +26,33 @@ final class GameMatch {
         self.multiplayerMatchID = multiplayerMatchID
     }
 
+    nonisolated func endMatch() {
+        logger.info("End match")
+        Task {
+            do {
+                if let multiplayerMatchID {
+                    logger.info("End multiplayer match")
+                    let multiplayerMatch = try await GKTurnBasedMatch.load(
+                        withID: multiplayerMatchID
+                    )
+                    for participant in multiplayerMatch.participants {
+                        if participant.player == GKLocalPlayer.local {
+                            participant.matchOutcome = .won
+                        } else {
+                            participant.matchOutcome = .lost
+                        }
+                    }
+                    try await multiplayerMatch.endMatchInTurn(
+                        withMatch: Data(board.map(\.rawValue))
+                    )
+                }
+            } catch {
+                logger.error("Error ending match: \(error)")
+                await MainActor.run { isErrorAlertPresented = true }
+            }
+        }
+    }
+
     nonisolated func playTurn(index: Int) {
         logger.info("Play turn index: \(index)")
         Task {

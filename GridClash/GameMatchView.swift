@@ -22,6 +22,10 @@ struct GameMatchView: View {
                 gridRow(6..<9)
             }
             .disabled(!gameMatch.isMyTurn)
+            Button("End Match") {
+                gameMatch.endMatch()
+            }
+            .disabled(!gameMatch.isMyTurn)
             Button("Back to Main Menu") {
                 gameManager.closeGame()
             }
