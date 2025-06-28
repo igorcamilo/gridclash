@@ -52,6 +52,7 @@ final class GameManager: NSObject {
 
     func startGame() {
         logger.info("Starting single player game")
+        gameMatch = GameMatch(isMyTurn: true, multiplayerMatchID: nil)
     }
 
     func startMultiplayerGame() {

@@ -19,15 +19,21 @@ final class GameMatch {
 
     var board: [BoardSlot]
     var isErrorAlertPresented = false
-    var isMyTurn = false
-    var localPlayerIndex: Int?
+    var isMyTurn: Bool
+
+    @ObservationIgnored private var localPlayerIndex: Int?
 
     init(
         board: [BoardSlot] = .init(repeating: .empty, count: 9),
+        isMyTurn: Bool = false,
         multiplayerMatchID: String?
     ) {
         self.board = board
+        self.isMyTurn = isMyTurn
         self.multiplayerMatchID = multiplayerMatchID
+        if multiplayerMatchID == nil {
+            self.localPlayerIndex = 0
+        }
     }
 
     nonisolated func endMatch() {
@@ -74,9 +80,9 @@ final class GameMatch {
                 default:
                     throw GameMatchError.invalidLocalPlayerIndex
                 }
-                await MainActor.run { isMyTurn = false }
                 if let multiplayerMatchID {
                     logger.info("End multiplayer turn")
+                    await MainActor.run { isMyTurn = false }
                     let multiplayerMatch = try await GKTurnBasedMatch.load(
                         withID: multiplayerMatchID
                     )
@@ -88,6 +94,14 @@ final class GameMatch {
                         turnTimeout: 3600,
                         match: Data(board.map(\.rawValue))
                     )
+                } else {
+                    await MainActor.run {
+                        if localPlayerIndex == 0 {
+                            localPlayerIndex = 1
+                        } else {
+                            localPlayerIndex = 0
+                        }
+                    }
                 }
             } catch {
                 logger.error("Error ending turn: \(error)")

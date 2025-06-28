@@ -71,7 +71,7 @@ private extension BoardSlot {
 
     @ViewBuilder var view: some View {
         switch self {
-        case .empty: Image("")
+        case .empty: Color.clear
         case .player1: Image(systemName: "xmark")
         case .player2: Image(systemName: "circle")
         }
