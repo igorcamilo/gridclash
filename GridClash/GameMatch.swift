@@ -6,7 +6,7 @@
 //  Copyright © 2025 Igor Camilo. All rights reserved.
 //
 
-@preconcurrency import GameKit
+import GameKit
 import Observation
 import os.log
 
@@ -15,50 +15,77 @@ private let logger = Logger(subsystem: "GridClash", category: "GameMatch")
 @Observable
 @MainActor
 final class GameMatch {
-    var isMyTurn = false
-    private var multiplayerMatch: GKTurnBasedMatch?
+    let multiplayerMatchID: String?
 
-    init(multiplayerMatch: GKTurnBasedMatch?) {
-        self.multiplayerMatch = multiplayerMatch
+    var board = [BoardSlot](repeating: .empty, count: 9)
+    var isErrorAlertPresented = false
+    var isMyTurn = false
+    var localPlayerIndex: Int?
+
+    init(multiplayerMatchID: String?) {
+        self.multiplayerMatchID = multiplayerMatchID
     }
 
-    func endTurn() {
-        logger.info("End turn")
+    nonisolated func playTurn(index: Int) {
+        logger.info("Play turn index: \(index)")
         Task {
             do {
-                isMyTurn = false
-                if let multiplayerMatch {
+                let slot = await board[index]
+                guard slot == .empty else {
+                    logger.info("Invalid turn: slot is not empty")
+                    return
+                }
+                switch await localPlayerIndex {
+                case 0:
+                    await MainActor.run { board[index] = .player1 }
+                case 1:
+                    await MainActor.run { board[index] = .player2 }
+                default:
+                    throw GameMatchError.invalidLocalPlayerIndex
+                }
+                await MainActor.run { isMyTurn = false }
+                if let multiplayerMatchID {
                     logger.info("End multiplayer turn")
+                    let multiplayerMatch = try await GKTurnBasedMatch.load(
+                        withID: multiplayerMatchID
+                    )
                     let nextParticipants = multiplayerMatch.participants.filter {
                         $0.player != GKLocalPlayer.local
                     }
-                    let _: Void = try await withCheckedThrowingContinuation { continuation in
-                        // As of Xcode 16.4, the async version of this method creates warnings
-                        multiplayerMatch.endTurn(
-                            withNextParticipants: nextParticipants,
-                            turnTimeout: 60,
-                            match: Data()
-                        ) { error in
-                            if let error {
-                                continuation.resume(throwing: error)
-                            } else {
-                                continuation.resume()
-                            }
-                        }
-                    }
+                    try await multiplayerMatch.endTurn(
+                        withNextParticipants: nextParticipants,
+                        turnTimeout: 3600,
+                        match: Data(board.map(\.rawValue))
+                    )
                 }
             } catch {
                 logger.error("Error ending turn: \(error)")
-                isMyTurn = multiplayerMatch?.currentParticipant?.player == GKLocalPlayer.local
+                await MainActor.run { isErrorAlertPresented = true }
             }
         }
     }
 
     func updateMultiplayerMatch(_ match: GKTurnBasedMatch) {
-        guard multiplayerMatch?.matchID == match.matchID else {
+        logger.info("Updating multiplayer match")
+        guard multiplayerMatchID == match.matchID else {
+            logger.info("Ignoring match update: wrong match ID")
             return
         }
-        isMyTurn = match.currentParticipant?.player == GKLocalPlayer.local
-        multiplayerMatch = match
+        Task {
+            if let data = try? await match.loadMatchData(), data.count == 9 {
+                board = data.map { BoardSlot(rawValue: $0) ?? .empty }
+            } else {
+                board = [BoardSlot](repeating: .empty, count: 9)
+            }
+            isMyTurn = match.currentParticipant?.player == GKLocalPlayer.local
+            localPlayerIndex = match.participants.firstIndex {
+                $0.player == GKLocalPlayer.local
+            }
+            logger.info("Updated multiplayer match, board: \(self.board)")
+        }
     }
+}
+
+enum GameMatchError: Error {
+    case invalidLocalPlayerIndex
 }

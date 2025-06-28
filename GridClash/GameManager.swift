@@ -88,7 +88,7 @@ extension GameManager: @preconcurrency GKTurnBasedEventListener {
         logger.info("Player received a turn event for match")
         if didBecomeActive {
             logger.info("Player is now active in the match")
-            gameMatch = GameMatch(multiplayerMatch: match)
+            gameMatch = GameMatch(multiplayerMatchID: match.matchID)
         }
         gameMatch?.updateMultiplayerMatch(match)
     }
