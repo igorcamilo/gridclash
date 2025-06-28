@@ -40,6 +40,11 @@ struct GameMatchView: View {
                 gameManager.closeGame()
             }
         }
+        #if os(macOS) || os(tvOS)
+        .onExitCommand {
+            gameManager.closeGame()
+        }
+        #endif
     }
 
     private func gridRow(_ range: Range<Int>) -> some View {
