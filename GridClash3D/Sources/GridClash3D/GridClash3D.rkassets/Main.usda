@@ -1,0 +1,155 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (476.0.0.508.4)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    def Cylinder "Cylinder" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        reorder nameChildren = ["DarkMaterial", "DefaultMaterial"]
+        uniform token axis = "Y"
+        double height = 0.02
+        rel material:binding = </Root/Cylinder/DefaultMaterial> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double radius = 0.5
+        float3 xformOp:translate = (0, -0.01, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def Material "DefaultMaterial"
+        {
+            token outputs:mtlx:surface
+            token outputs:realitykit:vertex
+            token outputs:surface.connect = </Root/Cylinder/DefaultMaterial/DefaultSurfaceShader.outputs:surface>
+
+            def Shader "DefaultSurfaceShader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (0.98, 0.98, 0.98) (
+                    colorSpace = "lin_srgb"
+                )
+                float inputs:roughness = 0
+                token outputs:surface
+            }
+        }
+    }
+
+    def "Player1" (
+        active = true
+        references = @Player1.usda@
+    )
+    {
+    }
+
+    def "Player1_1" (
+        active = true
+        references = @Player1.usda@
+    )
+    {
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        float3 xformOp:translate = (0.22, 0, 0.22)
+    }
+
+    def "Player1_2" (
+        active = true
+        references = @Player1.usda@
+    )
+    {
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        float3 xformOp:translate = (0.22, 0, -0.22)
+    }
+
+    def "Player1_3" (
+        active = true
+        references = @Player1.usda@
+    )
+    {
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        float3 xformOp:translate = (-0.22, 0, 0.22)
+    }
+
+    def "Player1_4" (
+        active = true
+        references = @Player1.usda@
+    )
+    {
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        float3 xformOp:translate = (-0.22, 0, -0.22)
+    }
+
+    def "Player2_1" (
+        active = true
+        references = @Player2.usda@
+    )
+    {
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        float3 xformOp:translate = (0.22, 0, 0)
+    }
+
+    def "Player2_2" (
+        active = true
+        references = @Player2.usda@
+    )
+    {
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        float3 xformOp:translate = (0, 0, 0.22)
+    }
+
+    def "Player2_3" (
+        active = true
+        references = @Player2.usda@
+    )
+    {
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        float3 xformOp:translate = (-0.22, 0, 0)
+    }
+
+    def "Player2_4" (
+        active = true
+        references = @Player2.usda@
+    )
+    {
+        float2 ui:nodegraph:node:pos = (20, 20)
+        int ui:nodegraph:node:stackingOrder = 1
+        float3 xformOp:translate = (0, 0, -0.22)
+    }
+
+    def Xform "DirectionalLight" (
+        customData = {
+            float3 rotationEulerHint = (-0.78539807, -0.78539807, -1.05367114e-7)
+        }
+    )
+    {
+        quatf xformOp:orient = (0.8535534, -0.35355335, -0.35355335, -0.14644662)
+        float3 xformOp:translate = (0, 0.5, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def RealityKitComponent "DirectionalLight"
+        {
+            token info:id = "RealityKit.DirectionalLight"
+            float intensity = 2000
+
+            def RealityKitStruct "Shadow"
+            {
+                bool isEnabled = 1
+            }
+        }
+    }
+}
+

@@ -8,6 +8,7 @@
 
 /* Begin PBXFileReference section */
 		D1319C202DFECCE20062BCAB /* Grid Clash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grid Clash.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D168E70E2E11443B00B2E494 /* GridClash3D */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GridClash3D; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -44,6 +45,7 @@
 			isa = PBXGroup;
 			children = (
 				D1319C222DFECCE20062BCAB /* GridClash */,
+				D168E70E2E11443B00B2E494 /* GridClash3D */,
 				D1319C212DFECCE20062BCAB /* Products */,
 			);
 			sourceTree = "<group>";
