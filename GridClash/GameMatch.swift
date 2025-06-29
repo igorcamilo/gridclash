@@ -10,10 +10,9 @@ import GameKit
 import Observation
 import os.log
 
-private let logger = Logger(subsystem: "GridClash", category: "GameMatch")
+private nonisolated let logger = Logger(subsystem: "GridClash", category: "GameMatch")
 
 @Observable
-@MainActor
 final class GameMatch {
     let multiplayerMatchID: String?
 

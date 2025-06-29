@@ -13,7 +13,6 @@ import os.log
 private let logger = Logger(subsystem: "GridClash", category: "GameManager")
 
 @Observable
-@MainActor
 final class GameManager: NSObject {
     var gameMatch: GameMatch?
     var isMultiplayerRestrictedAlertPresented = false
@@ -78,9 +77,9 @@ final class GameManager: NSObject {
     }
 }
 
-extension GameManager: GKLocalPlayerListener {}
+extension GameManager: @MainActor GKLocalPlayerListener {}
 
-extension GameManager: @preconcurrency GKTurnBasedEventListener {
+extension GameManager: GKTurnBasedEventListener {
     func player(_ player: GKPlayer, didRequestMatchWithOtherPlayers playersToInvite: [GKPlayer]) {
         logger.info("Player \(player) requested a match with other players: \(playersToInvite)")
     }
@@ -95,7 +94,7 @@ extension GameManager: @preconcurrency GKTurnBasedEventListener {
     }
 }
 
-extension GameManager: @preconcurrency GKTurnBasedMatchmakerViewControllerDelegate {
+extension GameManager: GKTurnBasedMatchmakerViewControllerDelegate {
     func turnBasedMatchmakerViewControllerWasCancelled(_ viewController: GKTurnBasedMatchmakerViewController) {
         logger.info("Matchmaker view controller cancelled")
         #if os(macOS)

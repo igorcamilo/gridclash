@@ -12,7 +12,7 @@ struct GridClashApp: App {
     @State private var gameManager = GameManager()
 
     var body: some Scene {
-        #if os(macOS)
+        #if os(macOS) || os(visionOS)
         Window("Grid Clash", id: "MainWindow") {
             ContentView(gameManager: gameManager)
                 .onAppear { gameManager.authenticate() }
