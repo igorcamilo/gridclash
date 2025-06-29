@@ -8,7 +8,13 @@
       "filename" : "Front.imagestacklayer"
     },
     {
+      "filename" : "MiddleFront.imagestacklayer"
+    },
+    {
       "filename" : "Middle.imagestacklayer"
+    },
+    {
+      "filename" : "MiddleBack.imagestacklayer"
     },
     {
       "filename" : "Back.imagestacklayer"

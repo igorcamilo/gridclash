@@ -1,12 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "GridClashTV2.png",
+      "filename" : "GridClashWide3.png",
       "idiom" : "tv",
       "scale" : "1x"
     },
     {
-      "filename" : "GridClashTV2@2x.png",
+      "filename" : "GridClashWide3@2x.png",
       "idiom" : "tv",
       "scale" : "2x"
     }

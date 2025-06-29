@@ -1,9 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "GridClash2@2x.png",
-      "idiom" : "vision",
-      "scale" : "2x"
+      "filename" : "GridClashWide4.png",
+      "idiom" : "tv"
     }
   ],
   "info" : {

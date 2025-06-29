@@ -2,23 +2,67 @@
   "fill-specializations" : [
     {
       "value" : {
-        "linear-gradient" : [
-          "display-p3:0.88000,0.96000,1.00000,1.00000",
-          "srgb:0.96000,0.95000,1.00000,1.00000"
-        ]
+        "solid" : "srgb:0.98000,0.98000,0.98000,1.00000"
       }
     },
     {
       "appearance" : "dark",
       "value" : {
-        "linear-gradient" : [
-          "display-p3:0.00000,0.15000,0.35000,1.00000",
-          "srgb:0.10000,0.05000,0.25000,1.00000"
-        ]
+        "solid" : "srgb:0.07100,0.07100,0.07100,1.00000"
       }
     }
   ],
   "groups" : [
+    {
+      "blur-material" : 0.5,
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "srgb:0.00000,0.47843,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:0.04000,0.51800,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "solid" : "gray:1.00000,1.00000"
+              }
+            }
+          ],
+          "image-name" : "GridClashPlayer1.svg",
+          "name" : "GridClashPlayer1",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "position" : {
+        "scale" : 0.5,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
     {
       "blur-material" : 0.5,
       "layers" : [
@@ -38,33 +82,69 @@
             {
               "appearance" : "tinted",
               "value" : {
-                "solid" : "gray:1.00000,1.00000"
+                "solid" : "gray:0.75000,1.00000"
               }
             }
           ],
-          "image-name" : "GridClashO.svg",
-          "name" : "GridClashO",
-          "position-specializations" : [
+          "image-name" : "GridClashPlayer2.svg",
+          "name" : "GridClashPlayer2",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "position" : {
+        "scale" : 0.5,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "blur-material" : 0.5,
+      "layers" : [
+        {
+          "fill-specializations" : [
             {
               "value" : {
-                "scale" : 1,
-                "translation-in-points" : [
-                  0,
-                  0
-                ]
+                "solid" : "srgb:0.00000,0.47843,1.00000,1.00000"
               }
             },
             {
-              "idiom" : "watchOS",
+              "appearance" : "dark",
               "value" : {
-                "scale" : 0.9,
-                "translation-in-points" : [
-                  0,
-                  0
-                ]
+                "solid" : "srgb:0.04000,0.51800,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "solid" : "gray:0.50000,1.00000"
               }
             }
-          ]
+          ],
+          "image-name" : "GridClashPlayer1.svg",
+          "name" : "GridClashPlayer1",
+          "position" : {
+            "scale" : 0.5,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
         }
       ],
       "shadow" : {
@@ -83,45 +163,31 @@
           "fill-specializations" : [
             {
               "value" : {
-                "solid" : "srgb:0.00000,0.47800,1.00000,1.00000"
+                "solid" : "srgb:1.00000,0.22000,0.38000,1.00000"
               }
             },
             {
               "appearance" : "dark",
               "value" : {
-                "solid" : "srgb:0.40000,0.51800,1.00000,1.00000"
+                "solid" : "srgb:1.00000,0.27000,0.23000,1.00000"
               }
             },
             {
               "appearance" : "tinted",
               "value" : {
-                "solid" : "gray:0.75000,1.00000"
+                "solid" : "gray:0.25000,1.00000"
               }
             }
           ],
-          "image-name" : "GridClashX.svg",
-          "name" : "GridClashX",
-          "position-specializations" : [
-            {
-              "value" : {
-                "scale" : 1,
-                "translation-in-points" : [
-                  0,
-                  0
-                ]
-              }
-            },
-            {
-              "idiom" : "watchOS",
-              "value" : {
-                "scale" : 0.9,
-                "translation-in-points" : [
-                  0,
-                  0
-                ]
-              }
-            }
-          ]
+          "image-name" : "GridClashPlayer2.svg",
+          "name" : "GridClashPlayer2",
+          "position" : {
+            "scale" : 0.8,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
         }
       ],
       "shadow" : {
