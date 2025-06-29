@@ -6,6 +6,10 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D1E60DAE2E11836500E783E8 /* GridClash3D in Frameworks */ = {isa = PBXBuildFile; productRef = D1E60DAD2E11836500E783E8 /* GridClash3D */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		D1319C202DFECCE20062BCAB /* Grid Clash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grid Clash.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D168E70E2E11443B00B2E494 /* GridClash3D */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = GridClash3D; sourceTree = "<group>"; };
@@ -36,6 +40,7 @@
 		D1319C1D2DFECCE20062BCAB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				D1E60DAE2E11836500E783E8 /* GridClash3D in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -46,6 +51,7 @@
 			children = (
 				D1319C222DFECCE20062BCAB /* GridClash */,
 				D168E70E2E11443B00B2E494 /* GridClash3D */,
+				D1E60DAC2E11836500E783E8 /* Frameworks */,
 				D1319C212DFECCE20062BCAB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,6 +62,13 @@
 				D1319C202DFECCE20062BCAB /* Grid Clash.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D1E60DAC2E11836500E783E8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -75,6 +88,9 @@
 				D1319C222DFECCE20062BCAB /* GridClash */,
 			);
 			name = GridClash;
+			packageProductDependencies = (
+				D1E60DAD2E11836500E783E8 /* GridClash3D */,
+			);
 			productName = GridClash;
 			productReference = D1319C202DFECCE20062BCAB /* Grid Clash.app */;
 			productType = "com.apple.product-type.application";
@@ -363,6 +379,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D1E60DAD2E11836500E783E8 /* GridClash3D */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GridClash3D;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D1319C182DFECCE20062BCAB /* Project object */;
 }

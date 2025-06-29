@@ -5,12 +5,35 @@
 //  Created by Igor Camilo on 15.06.25.
 //
 
+import GridClash3D
+import os.log
+import RealityKit
 import SwiftUI
+
+private let logger = Logger(subsystem: "GridClash", category: "ContentView")
 
 struct ContentView: View {
     @Bindable var gameManager: GameManager
 
     var body: some View {
+        RealityView { content in
+            do {
+                let entity = try await Entity(named: "Main", in: gridClash3DBundle)
+                content.add(entity)
+            } catch {
+                logger.error("Failed to load main entity: \(error)")
+            }
+        } update: { content in
+            // Update
+        } placeholder: {
+            ProgressView()
+        }
+        #if os(iOS) || os(macOS)
+        .realityViewCameraControls(.orbit)
+        #endif
+    }
+
+    @ViewBuilder private var oldContent: some View {
         if let gameMatch = gameManager.gameMatch {
             GameMatchView(
                 gameManager: gameManager,
